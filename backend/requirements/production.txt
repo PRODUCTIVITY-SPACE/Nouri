@@ -1,0 +1,13 @@
+-r base.txt
+gunicorn==22.0.0
+# Payments
+stripe==10.5.0              # Stripe — international cards
+africastalking==1.2.6       # Africa's Talking — SMS + USSD + Airtel Money
+requests==2.32.3             # M-Pesa Daraja API (REST calls)
+# Notifications
+twilio==9.2.2                # SMS fallback
+# Monitoring
+sentry-sdk==2.8.0
+whitenoise==6.7.0
+# PDF generation (receipts + kitchen slips)
+weasyprint==62.3
