@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-nouri}
+      POSTGRES_USER: ${POSTGRES_USER:-nouri}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nouri_secret}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nouri}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../devops/docker/backend/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: ./backend/.env
+    volumes:
+      - media_files:/app/mediafiles
+    expose:
+      - "8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../devops/docker/frontend/Dockerfile
+    depends_on:
+      - backend
+    env_file: ./frontend/.env.local
+    expose:
+      - "3000"
+
+  nginx:
+    build:
+      context: ./devops/docker/nginx
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - media_files:/app/mediafiles:ro
+
+volumes:
+  postgres_data:
+  redis_data:
+  media_files:

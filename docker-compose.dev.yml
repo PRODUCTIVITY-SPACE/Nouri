@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: nouri_dev
+      POSTGRES_USER: nouri
+      POSTGRES_PASSWORD: nouri_dev_secret
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../devops/docker/backend/Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    env_file: ./backend/.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.development
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../devops/docker/frontend/Dockerfile.dev
+    command: npm run dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    env_file: ./frontend/.env.local
+
+volumes:
+  postgres_dev_data:

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body { overflow-x: hidden; }
+  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-nouri-black text-white px-12 py-5 rounded-full font-bold text-sm
+           shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-none;
+  }
+  .btn-accent {
+    @apply bg-nouri-red text-white px-8 py-4 rounded-full font-bold text-sm
+           transition-all duration-300 hover:bg-nouri-red-dark cursor-pointer border-none;
+  }
+  .btn-outline {
+    @apply border border-gray-200 bg-white text-nouri-black px-6 py-2.5 rounded-full
+           font-semibold text-sm transition-all duration-200 cursor-pointer
+           hover:bg-nouri-red hover:text-white hover:border-nouri-red;
+  }
+  .page-header { @apply text-center pt-44 pb-12 px-4; }
+  .admin-card  { @apply bg-white rounded-2xl p-6 shadow-sm border border-gray-100; }
+  .status-badge { @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold; }
+}
