@@ -1,5 +1,4 @@
 from .base import *
-import sentry_sdk
 
 DEBUG = False
 
@@ -12,4 +11,7 @@ SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-sentry_sdk.init(dsn=config('SENTRY_DSN', default=''))
+SENTRY_DSN = config('SENTRY_DSN', default='')
+if SENTRY_DSN:
+    import sentry_sdk
+    sentry_sdk.init(dsn=SENTRY_DSN)
