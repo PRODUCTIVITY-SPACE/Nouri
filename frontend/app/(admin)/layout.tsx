@@ -1,5 +1,12 @@
-// Admin layout — sidebar + main content area
-// Protected: redirect to /login if no valid JWT (Phase 2)
+import { AdminTopBar } from '@/components/layout/AdminTopBar';
+import { AdminSideNav } from '@/components/layout/AdminSideNav';
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <div className="flex min-h-screen bg-gray-50">{children}</div>;
+  return (
+    <div className="min-h-screen bg-background">
+      <AdminTopBar />
+      <AdminSideNav />
+      <main className="pt-16 md:pl-64 min-h-screen">{children}</main>
+    </div>
+  );
 }
